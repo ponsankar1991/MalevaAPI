@@ -1,0 +1,175 @@
+{
+	"info": {
+		"_postman_id": "b22d7f5a-7c2c-4def-93e1-5e07667702aa",
+		"name": "Maleva API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15808834",
+		"_collection_link": "https://palanibe91.postman.co/workspace/New-PC~458c27d2-0772-4f68-ab83-ddae3f4893cf/collection/15808834-b22d7f5a-7c2c-4def-93e1-5e07667702aa?action=share&source=collection_link&creator=15808834"
+	},
+	"item": [
+		{
+			"name": "Auth/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"    const json = pm.response.json();",
+							"    ",
+							"    if (json && json.token && typeof json.token === \"string\" && json.token.length > 0) {",
+							"        pm.environment.set(\"token\", json.token);",
+							"        ",
+							"        pm.test(\"Token extracted and stored in environment\", () => {",
+							"            pm.expect(json.token).to.be.a(\"string\").and.not.be.empty;",
+							"            pm.expect(pm.environment.get(\"token\")).to.eql(json.token);",
+							"        });",
+							"    } else {",
+							"        pm.test(\"Token not found in response\", () => {",
+							"            pm.expect.fail(\"Response did not contain a valid 'token' field\");",
+							"        });",
+							"    }",
+							"} catch (e) {",
+							"    pm.test(\"Response is not valid JSON\", () => {",
+							"        pm.expect.fail(\"Failed to parse response JSON: \" + e.message);",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"admin\",\"password\":\"password\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}:{{port}}/Auth/login",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"Auth",
+						"login"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST \"{{baseUrl}}/Auth/login\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"username\":\"admin\",\"password\":\"password\"}'"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth/welcome",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/Auth/welcome",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Auth",
+						"welcome"
+					]
+				},
+				"description": "Generated from cURL: curl -H \"Authorization: Bearer <TOKEN>\" 'http://localhost:8080/Auth/welcome'"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth/logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/Auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"Auth",
+						"logout"
+					]
+				},
+				"description": "Generated from cURL: curl -i -X POST 'http://localhost:8080/Auth/logout' -H \"Authorization: Bearer $TOKEN\""
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BaseURL",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
